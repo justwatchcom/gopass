@@ -55,3 +55,14 @@ $ git tag -s vX.Y.Z
 $ git push origin vX.Y.Z
 ```
 
+### Reproducible Builds
+
+`gopass` supports [reproducible builds](https://reproducible-builds.org/). When
+building from git [`SOURCE_DATE_EPOCH`](https://reproducible-builds.org/docs/source-date-epoch/)
+can be used to override the compile date, .e.g `SOURCE_DATE_EPOCH=$(git log -1 --pretty=%ct)`.
+When building a release `goreleaser` will automatically use the exact timestamp
+of the last commit.
+
+Internal paths are stripped using `-trimpath` and appropriate `-ldflags` (e.g. 
+`-s`, `-w`). See the Makefile header for the exact set of flags.
+
