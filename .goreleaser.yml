@@ -90,6 +90,26 @@ milestones:
     fail_on_error: false
     name_template: "{{ .Major }}.{{ .Minor }}.{{ .Patch }}"
 
+snapcrafts:
+  - name: gopass
+    publish: false
+    summary: gopass
+    description: |
+      The team password manager
+    grade: devel
+    confinement: devmode
+    license: MIT
+    base: core20
+    apps:
+      gopass:
+        plugs: ["home", "network", "personal-files", "gpg-keys", "ssh-keys", "x11"]
+    plugs:
+      home:
+      personal-files:
+        write:
+        - $HOME/.config/gopass
+        - $HOME/.local/share/gopass
+
 signs:
   -
     id: gopass

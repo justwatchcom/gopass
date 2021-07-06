@@ -24,6 +24,14 @@ jobs:
         with:
           go-version: 1.16
       -
+        name: Set up Snapcraft
+        env:
+          SNAPCRAFT_LOGIN: ${{ secrets.SNAPCRAFT_LOGIN }}
+        run: |
+          sudo apt-get update
+          sudo apt-get -yq --no-install-suggests --no-install-recommends install snapcraft
+          snapcraft login --with <(echo "$SNAPCRAFT_LOGIN")
+      -
         name: Import GPG signing key
         id: import_gpg
         uses: crazy-max/ghaction-import-gpg@v3.1.0
