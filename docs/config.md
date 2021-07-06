@@ -16,6 +16,7 @@ Some configuration options are only available through setting environment variab
 | `GOPASS_GPG_OPTS`       | `string` | Add any extra arguments, e.g. `--armor` you want to pass to GPG on every invocation                          |
 | `GOPASS_EXTERNAL_PWGEN` | `string` | Use an external password generator. See [Features](features.md#using-custom-password-generators) for details |
 | `GOPASS_NOCOLOR`        | `bool`   | Set to true to disable colored output                                                                        |
+| `GOPASS_NO_SYMBOLS`     | `bool`   | Set to true to disable emojis in the output
 | `GOPASS_CHARACTER_SET`  | `bool`   | Set to any non-empty value to restrict the characters used in generated passwords                            |
 | `GOPASS_CONFIG`         | `string` | Set this to the absolute path to the configuration file                                                      |
 | `GOPASS_HOMEDIR`        | `string` | Set this to the absolute path of the directory containing the `.config/` tree                                |

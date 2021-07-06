@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"strings"
+	"unicode"
 
 	"github.com/fatih/color"
 	"github.com/gopasspw/gopass/pkg/ctxutil"
@@ -17,6 +19,20 @@ var (
 	// Stderr is exported for tests
 	Stderr io.Writer = os.Stderr
 )
+
+var outputFilter = func(in string) string {
+	return in
+}
+
+func init() {
+	if sv := os.Getenv("GOPASS_NO_SYMBOLS"); sv != "" {
+		outputFilter = func(in string) string {
+			return strings.TrimFunc(in, func(r rune) bool {
+				return unicode.IsSymbol(r)
+			})
+		}
+	}
+}
 
 // Secret is a string wrapper for strings containing secrets. These won't be
 // logged as long a GOPASS_DEBUG_LOG_SECRETS is not set
@@ -45,7 +61,7 @@ func Printf(ctx context.Context, format string, args ...interface{}) {
 		return
 	}
 	debug.LogN(1, format, args...)
-	fmt.Fprintf(Stdout, Prefix(ctx)+format+newline(ctx), args...)
+	fmt.Fprintf(Stdout, outputFilter(Prefix(ctx)+format+newline(ctx)), args...)
 }
 
 // Notice prints the string with an exclamation mark
@@ -59,7 +75,7 @@ func Noticef(ctx context.Context, format string, args ...interface{}) {
 		return
 	}
 	debug.LogN(1, "NOTICE: "+format, args...)
-	fmt.Fprintf(Stdout, Prefix(ctx)+"⚠ "+format+newline(ctx), args...)
+	fmt.Fprintf(Stdout, outputFilter(Prefix(ctx)+"⚠ "+format+newline(ctx)), args...)
 }
 
 // Error prints the string with a red cross in front
@@ -73,7 +89,7 @@ func Errorf(ctx context.Context, format string, args ...interface{}) {
 		return
 	}
 	debug.LogN(1, "ERROR: "+format, args...)
-	fmt.Fprint(Stderr, color.RedString(Prefix(ctx)+"❌ "+format+newline(ctx), args...))
+	fmt.Fprint(Stderr, outputFilter(color.RedString(Prefix(ctx)+"❌ "+format+newline(ctx), args...)))
 }
 
 // OK prints the string with a green checkmark in front
@@ -87,7 +103,7 @@ func OKf(ctx context.Context, format string, args ...interface{}) {
 		return
 	}
 	debug.LogN(1, "OK: "+format, args...)
-	fmt.Fprintf(Stdout, Prefix(ctx)+"✅ "+format+newline(ctx), args...)
+	fmt.Fprintf(Stdout, outputFilter(Prefix(ctx)+"✅ "+format+newline(ctx)), args...)
 }
 
 // Warning prints the string with a warning sign in front
@@ -101,5 +117,5 @@ func Warningf(ctx context.Context, format string, args ...interface{}) {
 		return
 	}
 	debug.LogN(1, "WARNING: "+format, args...)
-	fmt.Fprint(Stderr, color.YellowString(Prefix(ctx)+"⚠ "+format+newline(ctx), args...))
+	fmt.Fprint(Stderr, outputFilter(color.YellowString(Prefix(ctx)+"⚠ "+format+newline(ctx), args...)))
 }
