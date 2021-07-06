@@ -14,7 +14,7 @@ import (
 	"github.com/gopasspw/gopass/pkg/debug"
 )
 
-func extractFile(buf []byte, filename, dest string) error {
+func extractFile(buf []byte, filename, dest string) (int64, error) {
 	var mode = os.FileMode(0755)
 
 	// if overwriting an existing binary retain it's mode flags
@@ -25,13 +25,13 @@ func extractFile(buf []byte, filename, dest string) error {
 
 	if err := os.Remove(dest); err != nil {
 		if !os.IsNotExist(err) {
-			return fmt.Errorf("unable to remove destination file: %q", err)
+			return 0, fmt.Errorf("unable to remove destination file: %q", err)
 		}
 	}
 
 	dfh, err := os.OpenFile(dest, os.O_WRONLY|os.O_CREATE|os.O_EXCL, mode)
 	if err != nil {
-		return fmt.Errorf("failed to open file %q: %w", dest, err)
+		return 0, fmt.Errorf("failed to open file %q: %w", dest, err)
 	}
 	defer func() {
 		_ = dfh.Close()
@@ -42,7 +42,7 @@ func extractFile(buf []byte, filename, dest string) error {
 	case ".gz":
 		gzr, err := gzip.NewReader(rd)
 		if err != nil {
-			return err
+			return 0, err
 		}
 		return extractTar(gzr, dfh, dest)
 	case ".bz2":
@@ -50,14 +50,14 @@ func extractFile(buf []byte, filename, dest string) error {
 	case ".zip":
 		return extractZip(buf, dfh, dest)
 	default:
-		return fmt.Errorf("unsupported")
+		return 0, fmt.Errorf("unsupported")
 	}
 }
 
-func extractZip(buf []byte, dfh io.WriteCloser, dest string) error {
+func extractZip(buf []byte, dfh io.WriteCloser, dest string) (int64, error) {
 	zrd, err := zip.NewReader(bytes.NewReader(buf), int64(len(buf)))
 	if err != nil {
-		return err
+		return 0, err
 	}
 
 	for i := 0; i < len(zrd.File); i++ {
@@ -67,24 +67,24 @@ func extractZip(buf []byte, dfh io.WriteCloser, dest string) error {
 
 		file, err := zrd.File[i].Open()
 		if err != nil {
-			return fmt.Errorf("failed to read from zip file: %w", err)
+			return 0, fmt.Errorf("failed to read from zip file: %w", err)
 		}
 
 		n, err := io.Copy(dfh, file)
 		if err != nil {
 			dfh.Close()
 			os.Remove(dest)
-			return fmt.Errorf("failed to read gopass.exe from zip file: %w", err)
+			return 0, fmt.Errorf("failed to read gopass.exe from zip file: %w", err)
 		}
 		// success
 		debug.Log("wrote %d bytes to %v", n, dest)
-		return nil
+		return n, nil
 	}
 
-	return fmt.Errorf("file not found in archive")
+	return 0, fmt.Errorf("file not found in archive")
 }
 
-func extractTar(rd io.Reader, dfh io.WriteCloser, dest string) error {
+func extractTar(rd io.Reader, dfh io.WriteCloser, dest string) (int64, error) {
 	tarReader := tar.NewReader(rd)
 	for {
 		header, err := tarReader.Next()
@@ -92,7 +92,7 @@ func extractTar(rd io.Reader, dfh io.WriteCloser, dest string) error {
 			break
 		}
 		if err != nil {
-			return fmt.Errorf("failed to read from tar file: %w", err)
+			return 0, fmt.Errorf("failed to read from tar file: %w", err)
 		}
 		name := filepath.Base(header.Name)
 		if header.Typeflag != tar.TypeReg {
@@ -106,11 +106,11 @@ func extractTar(rd io.Reader, dfh io.WriteCloser, dest string) error {
 		if err != nil {
 			dfh.Close()
 			os.Remove(dest)
-			return fmt.Errorf("failed to read gopass from tar file: %w", err)
+			return n, fmt.Errorf("failed to read gopass from tar file: %w", err)
 		}
 		// success
 		debug.Log("wrote %d bytes to %v", n, dest)
-		return nil
+		return n, nil
 	}
-	return fmt.Errorf("file not found in archive")
+	return 0, fmt.Errorf("file not found in archive")
 }

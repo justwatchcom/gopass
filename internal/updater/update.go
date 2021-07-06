@@ -19,10 +19,19 @@ var (
 	UpdateMoveAfterQuit = true
 )
 
+// PrintCallback is a method that can print formatted text, e.g. out.Print
+type PrintCallback func(context.Context, string, ...interface{})
+
 // Update will start th interactive update assistant
-func Update(ctx context.Context, currentVersion semver.Version) error {
+func Update(ctx context.Context, currentVersion semver.Version, printf PrintCallback) error {
+	if printf == nil {
+		printf = func(ctx context.Context, fmt string, args ...interface{}) {
+			// no-op
+		}
+	}
+
 	if err := IsUpdateable(ctx); err != nil {
-		out.Errorf(ctx, "Your gopass binary is externally managed. Can not update: %q", err)
+		printf(ctx, "Your gopass binary is externally managed. Can not update: %q", err)
 		return err
 	}
 
@@ -39,19 +48,20 @@ func Update(ctx context.Context, currentVersion semver.Version) error {
 	debug.Log("Current: %s - Latest: %s", currentVersion.String(), rel.Version.String())
 	// binary is newer or equal to the latest release -> nothing to do
 	if currentVersion.GTE(rel.Version) {
-		out.Printf(ctx, "gopass is up to date (%s)", currentVersion.String())
+		printf(ctx, "gopass is up to date (%s)", currentVersion.String())
 		if gfu := os.Getenv("GOPASS_FORCE_UPDATE"); gfu == "" {
 			return nil
 		}
 	}
 
-	debug.Log("downloading SHA256SUMS ...")
+	printf(ctx, "latest version is %s", rel.Version.String())
+	printf(ctx, "downloading SHA256SUMS")
 	_, sha256sums, err := downloadAsset(ctx, rel.Assets, "SHA256SUMS")
 	if err != nil {
 		return err
 	}
 
-	debug.Log("downloading SHA256SUMS.sig ...")
+	out.Print(ctx, "downloading SHA256SUMS.sig")
 	_, sig, err := downloadAsset(ctx, rel.Assets, "SHA256SUMS.sig")
 	if err != nil {
 		return err
@@ -63,9 +73,9 @@ func Update(ctx context.Context, currentVersion semver.Version) error {
 		return fmt.Errorf("signature verification failed: %w", err)
 	}
 	if !ok {
-		return fmt.Errorf("GPG signature verification for SHA256SUMS failed")
+		return fmt.Errorf("GPG signature verification failed")
 	}
-	debug.Log("GPG signature OK!")
+	printf(ctx, "GPG signature verification succeeded")
 
 	ext := "tar.gz"
 	if runtime.GOOS == "windows" {
@@ -73,7 +83,7 @@ func Update(ctx context.Context, currentVersion semver.Version) error {
 	}
 
 	suffix := fmt.Sprintf("%s-%s.%s", runtime.GOOS, runtime.GOARCH, ext)
-	debug.Log("downloading tarball %q ...", suffix)
+	printf(ctx, "downloading gopass-%s", suffix)
 	dlFilename, buf, err := downloadAsset(ctx, rel.Assets, suffix)
 	if err != nil {
 		return err
@@ -90,14 +100,18 @@ func Update(ctx context.Context, currentVersion semver.Version) error {
 	if !bytes.Equal(wantHash, gotHash[:]) {
 		return fmt.Errorf("SHA256 hash mismatch, want %02x, got %02x", wantHash, gotHash)
 	}
+
 	debug.Log("hashsums match!")
+	printf(ctx, "downloaded gopass-%s", suffix)
 
 	debug.Log("extracting binary from tarball ...")
-	if err := extractFile(buf, dlFilename, dest); err != nil {
+	size, err := extractFile(buf, dlFilename, dest)
+	if err != nil {
 		return err
 	}
 	debug.Log("extracted %q to %q", dlFilename, dest)
 
-	debug.Log("success!")
+	printf(ctx, "saved %d bytes to %s", size, dest)
+	printf(ctx, "successfully updated gopass to version %s", rel.Version.String())
 	return nil
 }
