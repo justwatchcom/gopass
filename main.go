@@ -243,22 +243,9 @@ func initContext(ctx context.Context, cfg *config.Config) context.Context {
 		ctx = leaf.WithCheckRecipients(ctx, false)
 	}
 
-	// need this override for our integration tests
-	if nc := os.Getenv("GOPASS_NOCOLOR"); nc == "true" || ctxutil.IsNoColor(ctx) {
-		color.NoColor = true
-		ctx = ctxutil.WithColor(ctx, false)
-	}
-
-	// support for no-color.org
-	if nc := os.Getenv("NO_COLOR"); nc != "" {
-		color.NoColor = true
-		ctx = ctxutil.WithColor(ctx, false)
-	}
-
 	// only emit color codes when stdout is a terminal
 	if !isatty.IsTerminal(os.Stdout.Fd()) {
 		color.NoColor = true
-		ctx = ctxutil.WithColor(ctx, false)
 		ctx = ctxutil.WithTerminal(ctx, false)
 		ctx = ctxutil.WithInteractive(ctx, false)
 	}
@@ -274,7 +261,6 @@ func initContext(ctx context.Context, cfg *config.Config) context.Context {
 	// disable this for all terms on this platform
 	if runtime.GOOS == "windows" {
 		color.NoColor = true
-		ctx = ctxutil.WithColor(ctx, false)
 	}
 
 	return ctx

@@ -21,7 +21,6 @@ type Config struct {
 	AutoImport    bool              `yaml:"autoimport"`    // import missing public keys w/o asking
 	ClipTimeout   int               `yaml:"cliptimeout"`   // clear clipboard after seconds
 	ExportKeys    bool              `yaml:"exportkeys"`    // automatically export public keys of all recipients
-	NoColor       bool              `yaml:"nocolor"`       // do not use color when outputing text
 	NoPager       bool              `yaml:"nopager"`       // do not invoke a pager to display long lists
 	Notifications bool              `yaml:"notifications"` // enable desktop notifications
 	Parsing       bool              `yaml:"parsing"`       // allows to switch off all output parsing

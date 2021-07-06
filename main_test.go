@@ -161,11 +161,4 @@ func TestInitContext(t *testing.T) {
 
 	ctx = initContext(ctx, cfg)
 	assert.Equal(t, true, gpg.IsAlwaysTrust(ctx))
-
-	assert.NoError(t, os.Setenv("GOPASS_DEBUG", "true"))
-	ctx = initContext(ctx, cfg)
-
-	assert.NoError(t, os.Setenv("GOPASS_NOCOLOR", "true"))
-	ctx = initContext(ctx, cfg)
-	assert.Equal(t, false, ctxutil.IsColor(ctx))
 }

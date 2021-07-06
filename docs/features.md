@@ -444,7 +444,7 @@ Running `gopass [generate|insert] foo/bar` on an existing entry `foo/bar` will o
 
 ### Disabling Colors
 
-Disabling colors is as simple as setting `GOPASS_NOCOLOR` to `true`.
+Disabling colors is as simple as setting `NO_COLOR` to `true`. See [no-color.org](https://no-color.org) for more information.
 
 ### Password Templates
 

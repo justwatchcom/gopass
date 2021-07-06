@@ -15,7 +15,6 @@ Some configuration options are only available through setting environment variab
 | `GOPASS_UMASK`          | `octal`  | Set to any valid umask to mask bits of files created by gopass                                               |
 | `GOPASS_GPG_OPTS`       | `string` | Add any extra arguments, e.g. `--armor` you want to pass to GPG on every invocation                          |
 | `GOPASS_EXTERNAL_PWGEN` | `string` | Use an external password generator. See [Features](features.md#using-custom-password-generators) for details |
-| `GOPASS_NOCOLOR`        | `bool`   | Set to true to disable colored output                                                                        |
 | `GOPASS_CHARACTER_SET`  | `bool`   | Set to any non-empty value to restrict the characters used in generated passwords                            |
 | `GOPASS_CONFIG`         | `string` | Set this to the absolute path to the configuration file                                                      |
 | `GOPASS_HOMEDIR`        | `string` | Set this to the absolute path of the directory containing the `.config/` tree                                |
@@ -33,6 +32,7 @@ Variables not exclusively used by gopass
 | `PAGER`                | `string` | the pager program used for `gopass list`. See [Features](features.md#auto-pager) for details           |
 | `GIT_AUTHOR_NAME`      | `string` | name of the author, used by the rcs backend to create a commit                                         |
 | `GIT_AUTHOR_EMAIL`     | `string` | email of the author, used by the rcs backend to create a commit                                        |
+| `NO_COLOR`             | `bool`   | disable color output. See [no-color.org](https://no-color.org) for more information.
 
 ## Configuration Options
 

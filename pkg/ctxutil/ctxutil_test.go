@@ -9,14 +9,6 @@ import (
 	"github.com/urfave/cli/v2"
 )
 
-func TestColor(t *testing.T) {
-	ctx := context.Background()
-
-	assert.Equal(t, true, IsColor(ctx))
-	assert.Equal(t, true, IsColor(WithColor(ctx, true)))
-	assert.Equal(t, false, IsColor(WithColor(ctx, false)))
-}
-
 func TestTerminal(t *testing.T) {
 	ctx := context.Background()
 
@@ -71,14 +63,6 @@ func TestAlwaysYes(t *testing.T) {
 	assert.Equal(t, false, IsAlwaysYes(ctx))
 	assert.Equal(t, true, IsAlwaysYes(WithAlwaysYes(ctx, true)))
 	assert.Equal(t, false, IsAlwaysYes(WithAlwaysYes(ctx, false)))
-}
-
-func TestNoColor(t *testing.T) {
-	ctx := context.Background()
-
-	assert.Equal(t, false, IsNoColor(ctx))
-	assert.Equal(t, true, IsNoColor(WithNoColor(ctx, true)))
-	assert.Equal(t, false, IsNoColor(WithNoColor(ctx, false)))
 }
 
 func TestVerbose(t *testing.T) {
@@ -139,7 +123,6 @@ func TestCommitMessage(t *testing.T) {
 
 func TestComposite(t *testing.T) {
 	ctx := context.Background()
-	ctx = WithColor(ctx, false)
 	ctx = WithTerminal(ctx, false)
 	ctx = WithInteractive(ctx, false)
 	ctx = WithStdin(ctx, true)
@@ -147,7 +130,6 @@ func TestComposite(t *testing.T) {
 	ctx = WithShowSafeContent(ctx, true)
 	ctx = WithGitCommit(ctx, false)
 	ctx = WithAlwaysYes(ctx, true)
-	ctx = WithNoColor(ctx, true)
 	ctx = WithVerbose(ctx, true)
 	ctx = WithNotifications(ctx, true)
 	ctx = WithExportKeys(ctx, false)
@@ -157,9 +139,6 @@ func TestComposite(t *testing.T) {
 	ctx = WithCommitMessage(ctx, "foobar")
 	ctx = WithForce(ctx, true)
 	ctx = WithGitInit(ctx, false)
-
-	assert.Equal(t, false, IsColor(ctx))
-	assert.Equal(t, true, HasColor(ctx))
 
 	assert.Equal(t, false, IsTerminal(ctx))
 	assert.Equal(t, true, HasTerminal(ctx))
@@ -181,9 +160,6 @@ func TestComposite(t *testing.T) {
 
 	assert.Equal(t, true, IsAlwaysYes(ctx))
 	assert.Equal(t, true, HasAlwaysYes(ctx))
-
-	assert.Equal(t, true, IsNoColor(ctx))
-	assert.Equal(t, true, HasNoColor(ctx))
 
 	assert.Equal(t, true, IsVerbose(ctx))
 	assert.Equal(t, true, HasVerbose(ctx))

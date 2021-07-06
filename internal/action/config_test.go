@@ -42,7 +42,6 @@ func TestConfig(t *testing.T) {
 autoimport: true
 cliptimeout: 45
 exportkeys: true
-nocolor: false
 nopager: false
 notifications: true
 parsing: true
@@ -83,7 +82,6 @@ parsing: true
 autoimport: true
 cliptimeout: 45
 exportkeys: true
-nocolor: false
 nopager: true
 notifications: true
 parsing: true
@@ -119,7 +117,6 @@ parsing: true
 autoimport
 cliptimeout
 exportkeys
-nocolor
 nopager
 notifications
 parsing

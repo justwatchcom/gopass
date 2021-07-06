@@ -70,10 +70,10 @@ func newTester(t *testing.T) *tester {
 	ts.tempDir = td
 
 	// prepare ENVIRONMENT
-	ts.resetFn = gptest.UnsetVars("GNUPGHOME", "GOPASS_DEBUG", "GOPASS_NOCOLOR", "GOPASS_CONFIG", "GOPASS_NO_NOTIFY", "GOPASS_HOMEDIR")
+	ts.resetFn = gptest.UnsetVars("GNUPGHOME", "GOPASS_DEBUG", "NO_COLOR", "GOPASS_CONFIG", "GOPASS_NO_NOTIFY", "GOPASS_HOMEDIR")
 	require.NoError(t, os.Setenv("GNUPGHOME", ts.gpgDir()))
 	require.NoError(t, os.Setenv("GOPASS_DEBUG", ""))
-	require.NoError(t, os.Setenv("GOPASS_NOCOLOR", "true"))
+	require.NoError(t, os.Setenv("NO_COLOR", "true"))
 	require.NoError(t, os.Setenv("GOPASS_CONFIG", ts.gopassConfig()))
 	require.NoError(t, os.Setenv("GOPASS_NO_NOTIFY", "true"))
 	require.NoError(t, os.Setenv("GOPASS_HOMEDIR", td))

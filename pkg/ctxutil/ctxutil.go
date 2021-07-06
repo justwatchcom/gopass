@@ -12,15 +12,13 @@ import (
 type contextKey int
 
 const (
-	ctxKeyColor contextKey = iota
-	ctxKeyTerminal
+	ctxKeyTerminal contextKey = iota
 	ctxKeyInteractive
 	ctxKeyStdin
 	ctxKeyNoPager
 	ctxKeyShowSafeContent
 	ctxKeyGitCommit
 	ctxKeyAlwaysYes
-	ctxKeyNoColor
 	ctxKeyVerbose
 	ctxKeyNotifications
 	ctxKeyProgressCallback
@@ -50,21 +48,6 @@ func WithGlobalFlags(c *cli.Context) context.Context {
 
 // ProgressCallback is a callback for updateing progress
 type ProgressCallback func()
-
-// WithColor returns a context with an explicit value for color
-func WithColor(ctx context.Context, color bool) context.Context {
-	return context.WithValue(ctx, ctxKeyColor, color)
-}
-
-// HasColor returns true if a value for Color has been set in this context
-func HasColor(ctx context.Context) bool {
-	return hasBool(ctx, ctxKeyColor)
-}
-
-// IsColor returns the value of color or the default (true)
-func IsColor(ctx context.Context) bool {
-	return is(ctx, ctxKeyColor, true)
-}
 
 // WithTerminal returns a context with an explicit value for terminal
 func WithTerminal(ctx context.Context, isTerm bool) context.Context {
@@ -202,26 +185,6 @@ func HasGitCommit(ctx context.Context) bool {
 // IsGitCommit returns the value of git commit or the default (true)
 func IsGitCommit(ctx context.Context) bool {
 	return is(ctx, ctxKeyGitCommit, true)
-}
-
-// WithNoColor returns a context with the value for ask for more set
-func WithNoColor(ctx context.Context, bv bool) context.Context {
-	return context.WithValue(ctx, ctxKeyNoColor, bv)
-}
-
-// HasNoColor returns true if a value for NoColor has been set in this context
-func HasNoColor(ctx context.Context) bool {
-	_, ok := ctx.Value(ctxKeyNoColor).(bool)
-	return ok
-}
-
-// IsNoColor returns the value of ask for more or the default (false)
-func IsNoColor(ctx context.Context) bool {
-	bv, ok := ctx.Value(ctxKeyNoColor).(bool)
-	if !ok {
-		return false
-	}
-	return bv
 }
 
 // WithAlwaysYes returns a context with the value of always yes set

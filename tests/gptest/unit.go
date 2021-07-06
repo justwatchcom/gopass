@@ -62,7 +62,7 @@ func NewUnitTester(t *testing.T) *Unit {
 		"GOPASS_DISABLE_ENCRYPTION": "true",
 		"GOPASS_EXPERIMENTAL_GOGIT": "",
 		"GOPASS_HOMEDIR":            u.Dir,
-		"GOPASS_NOCOLOR":            "true",
+		"NO_COLOR":                  "true",
 		"GOPASS_NO_NOTIFY":          "true",
 		"PAGER":                     "",
 	}
