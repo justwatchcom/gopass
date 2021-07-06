@@ -86,7 +86,6 @@ mounts:
 			cfg: `root:
   autoclip: true
   autoimport: false
-  autosync: false
   check_recipient_hash: false
   cliptimeout: 45
   concurrency: 50
@@ -102,7 +101,6 @@ mounts:
   foo/sub:
     autoclip: true
     autoimport: false
-    autosync: false
     check_recipient_hash: false
     cliptimeout: 45
     concurrency: 50
@@ -117,7 +115,6 @@ mounts:
   work:
     autoclip: true
     autoimport: false
-    autosync: false
     check_recipient_hash: false
     cliptimeout: 45
     concurrency: 50
@@ -151,7 +148,6 @@ mounts:
 			cfg: `root:
   askformore: false
   autoimport: false
-  autosync: false
   cliptimeout: 45
   noconfirm: false
   nopager: false
@@ -161,7 +157,6 @@ mounts:
   foo/sub:
     askformore: false
     autoimport: false
-    autosync: false
     cliptimeout: 45
     noconfirm: false
     nopager: false
@@ -170,7 +165,6 @@ mounts:
   work:
     askformore: false
     autoimport: false
-    autosync: false
     cliptimeout: 45
     noconfirm: false
     nopager: false
@@ -197,7 +191,6 @@ version: 1.4.0`,
 			name: "1.3.0",
 			cfg: `askformore: false
 autoimport: true
-autosync: false
 cliptimeout: 45
 mounts:
   dev: /Users/johndoe/.password-store-dev
@@ -352,7 +345,6 @@ version: "1.0.0"`,
 const testConfig = `root:
   askformore: true
   autoimport: true
-  autosync: true
   cliptimeout: 5
   noconfirm: true
   nopager: true
@@ -362,7 +354,6 @@ mounts:
   foo/sub:
     askformore: false
     autoimport: false
-    autosync: false
     cliptimeout: 45
     noconfirm: false
     nopager: false
@@ -371,7 +362,6 @@ mounts:
   work:
     askformore: false
     autoimport: false
-    autosync: false
     cliptimeout: 45
     noconfirm: false
     nopager: false

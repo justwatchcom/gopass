@@ -267,13 +267,23 @@ $ gopass sync
 Certain long running operations, like `gopass sync` or `copy to clipboard` will
 try to show desktop notifications [Linux only].
 
-### git auto-push and auto-pull
+### git auto-push and sync
 
-If you want gopass to always push changes in git to your default remote server (origin), enable auto sync:
+gopass always pushes changes to your default git remote server (origin).
+
+If you want to pull changes from git, you need to run the sync command:
 
 ```bash
-$ gopass config autosync true
+$ gopass sync 
 ```
+
+You can selectively pull changes into named stores:
+
+```bash
+$ gopass sync --store foo 
+```
+
+For details see: [`sync` command](commands/sync.md)
 
 ### Check Passwords for Common Flaws
 
@@ -350,7 +360,6 @@ Commands that support the `--store` flag:
 | `gopass init`              | `gopass init --store=foo`                     | Initialize and mount the new sub store *foo* |
 | `gopass recipients add`    | `gopass recipients add --store=foo GPGxID`    | Add the new recipient *GPGxID* to the store *foo* |
 | `gopass recipients remove` | `gopass recipients remove --store=foo GPGxID` | Remove the existing recipients *GPGxID* from the store *foo* |
-| `gopass config`            | `gopass config --store=foo autosync false`    | Set the config flag `autosync` to `false` for the store *foo* |
 
 ### Directly edit structured secrets aka. YAML support
 
@@ -386,7 +395,6 @@ $ gopass config
 askformore: false
 autoclip: true
 autoimport: false
-autosync: true
 cliptimeout: 10
 noconfirm: false
 path: /home/user/.password-store
